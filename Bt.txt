@@ -1,0 +1,28 @@
+#include "BluetoothSerial.h"  // Include the Bluetooth Serial library
+
+BluetoothSerial ESP_BT;       // Create a BluetoothSerial object
+
+void setup() {
+  Serial.begin(115200);       // Start serial communication with the computer
+  ESP_BT.begin("ESP32_Bluetooth"); // Initialize Bluetooth with a custom name
+  Serial.println("Bluetooth Device is Ready to Pair");
+}
+
+void loop() {
+  // Check if data is received over Bluetooth
+  if (ESP_BT.available()) {
+    char incomingChar = ESP_BT.read(); // Read the incoming data
+    Serial.print("Received via Bluetooth: ");
+    Serial.println(incomingChar);      // Print data to Serial Monitor
+
+    // Echo the received data back via Bluetooth
+    ESP_BT.print("Echo: ");
+    ESP_BT.println(incomingChar);
+  }
+
+  // Check if data is received over Serial (from the Serial Monitor)
+  if (Serial.available()) {
+    char outgoingChar = Serial.read(); // Read the data from Serial Monitor
+    ESP_BT.print(outgoingChar);        // Send data to Bluetooth
+  }
+}
